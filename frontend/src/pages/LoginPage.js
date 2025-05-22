@@ -2,17 +2,21 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+const API = process.env.REACT_APP_API_URL || '';
+
 const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
     try {
-      const res = await axios.post('/api/auth/login', { username, password });
+      const res = await axios.post(`${API}/api/auth/login`, { username, password });
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('role', res.data.role);
       // Redirect based on role
@@ -22,6 +26,7 @@ const LoginPage = () => {
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
     }
+    setLoading(false);
   };
 
   return (
@@ -36,7 +41,7 @@ const LoginPage = () => {
           <label className="form-label">Password</label>
           <input type="password" className="form-control" value={password} onChange={e => setPassword(e.target.value)} required />
         </div>
-        <button type="submit" className="btn btn-primary w-100">Login</button>
+        <button type="submit" className="btn btn-primary w-100" disabled={loading}>{loading ? 'Logging in...' : 'Login'}</button>
       </form>
       {error && <div className="alert alert-danger mt-3">{error}</div>}
     </div>

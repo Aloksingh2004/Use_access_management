@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../AuthContext';
 
+const API = process.env.REACT_APP_API_URL || '';
+
 const RequestAccessPage = () => {
   const { token } = useAuth();
   const [softwareList, setSoftwareList] = useState([]);
@@ -18,7 +20,7 @@ const RequestAccessPage = () => {
     const fetchSoftware = async () => {
       setLoading(true);
       try {
-        const res = await axios.get('/api/software', {
+        const res = await axios.get(`${API}/api/software`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setSoftwareList(res.data);
@@ -48,7 +50,7 @@ const RequestAccessPage = () => {
     setSuccess('');
     setSubmitting(true);
     try {
-      await axios.post('/api/requests', {
+      await axios.post(`${API}/api/requests`, {
         softwareId: parseInt(softwareId),
         accessType,
         reason,

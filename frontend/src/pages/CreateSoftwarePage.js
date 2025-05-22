@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../AuthContext';
 
+const API = process.env.REACT_APP_API_URL || '';
+
 const CreateSoftwarePage = () => {
   const { token } = useAuth();
   const [name, setName] = useState('');
@@ -15,7 +17,7 @@ const CreateSoftwarePage = () => {
     setError('');
     setSuccess('');
     try {
-      await axios.post('/api/software', {
+      await axios.post(`${API}/api/software`, {
         name,
         description,
         accessLevels: accessLevels.split(',').map(l => l.trim()),

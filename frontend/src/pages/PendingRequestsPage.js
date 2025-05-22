@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../AuthContext';
 
+const API = process.env.REACT_APP_API_URL || '';
+
 const PendingRequestsPage = () => {
   const { token } = useAuth();
   const [requests, setRequests] = useState([]);
@@ -14,7 +16,7 @@ const PendingRequestsPage = () => {
     setError('');
     setLoading(true);
     try {
-      const res = await axios.get('/api/requests/pending', {
+      const res = await axios.get(`${API}/api/requests/pending`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setRequests(res.data);
@@ -34,7 +36,7 @@ const PendingRequestsPage = () => {
     setActionMsg('');
     setActionLoading(id);
     try {
-      await axios.patch(`/api/requests/${id}`, { status }, {
+      await axios.patch(`${API}/api/requests/${id}`, { status }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setActionMsg(`Request ${status.toLowerCase()}!`);
